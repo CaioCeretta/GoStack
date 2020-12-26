@@ -1,6 +1,7 @@
 import 'reflect-metadata';
 
 import AppError from '@shared/errors/AppError';
+import FakeCacheCacheProvider from '@shared/container/providers/CacheProvider/fakes/FakeCacheProvider';
 import CreateAppointmentService from './CreateAppointmentService';
 import FakeAppointmentsRepository from '../repositories/fakes/FakeAppointmentsRepository';
 import FakeNotificationsRepository from '../../notifications/repositories/fakes/FakeNotificationsRepository';
@@ -8,14 +9,17 @@ import FakeNotificationsRepository from '../../notifications/repositories/fakes/
 let fakeAppointmentsRepository: FakeAppointmentsRepository;
 let createAppointment: CreateAppointmentService;
 let fakeNotificationsRepository: FakeNotificationsRepository;
+let fakeCacheProvider: FakeCacheCacheProvider;
 
 describe('CreateAppointment', () => {
   beforeEach(() => {
     fakeAppointmentsRepository = new FakeAppointmentsRepository();
     fakeNotificationsRepository = new FakeNotificationsRepository();
+    fakeCacheProvider = new FakeCacheCacheProvider();
     createAppointment = new CreateAppointmentService(
       fakeAppointmentsRepository,
       fakeNotificationsRepository,
+      fakeCacheProvider,
     );
   });
   it('should be able to create a new appointment', async () => {

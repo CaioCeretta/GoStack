@@ -47,18 +47,22 @@ class AppointmentsRepository implements IAppointmentsRepository {
             `to_char(${dateFieldName}, 'DD-MM-YYYY') = '${parsedDay}-${parsedMonth}-${year}'`,
         ),
       },
+      relations: ['user'],
     });
 
     return appointments;
   }
 
-  public async findByDate(date: Date): Promise<Appointment | undefined> {
+  public async findByDate(
+    provider_id: string,
+    date: Date,
+  ): Promise<Appointment | undefined> {
     // const findAppointmentInSameDate = this.appointments.find(appointment =>
     //   isEqual(date, appointment.date),
     // );
 
     const findAppointmentInSameDate = await this.ormRepository.findOne({
-      where: { date },
+      where: { provider_id, date },
     });
 
     return findAppointmentInSameDate;
@@ -70,8 +74,9 @@ class AppointmentsRepository implements IAppointmentsRepository {
     date,
   }: ICreateAppointmentDTO): Promise<Appointment> {
     const appointment = this.ormRepository.create({
-      date,
+      provider_id,
       user_id,
+      date,
     });
 
     await this.ormRepository.save(appointment);

@@ -1,15 +1,14 @@
 import 'reflect-metadata';
 
 import AppError from '@shared/errors/AppError';
+import FakeCacheProvider from '@shared/container/providers/CacheProvider/fakes/FakeCacheProvider';
 import FakeHashProvider from '../providers/HashProvider/fakes/FakeHashProvider';
 import AuthenticateUserService from './AuthenticateUserService';
 import FakeUsersRepository from '../repositories/fakes/FakeUsersRepository';
-import CreateUserService from './CreateUserService';
 
 let fakeUsersRepository: FakeUsersRepository;
 let fakeHashProvider: FakeHashProvider;
 let authenticateUser: AuthenticateUserService;
-let createUser: CreateUserService;
 
 describe('AuthenticateUser', () => {
   beforeEach(() => {
@@ -19,10 +18,9 @@ describe('AuthenticateUser', () => {
       fakeUsersRepository,
       fakeHashProvider,
     );
-    createUser = new CreateUserService(fakeUsersRepository, fakeHashProvider);
   });
   it('should be able to authenticate', async () => {
-    const user = await createUser.execute({
+    const user = await fakeUsersRepository.create({
       name: 'John Doe',
       email: 'johndoe@example.com',
       password: '1234',
@@ -47,11 +45,11 @@ describe('AuthenticateUser', () => {
   });
 
   it('should not be able to authenticate with wrong password', async () => {
-    // const user = await createUser.execute({
-    //   name: 'John Doe',
-    //   email: 'johndoe@example.com',
-    //   password: '1234',
-    // });
+    await fakeUsersRepository.create({
+      name: 'John Doe',
+      email: 'johndoe@example.com',
+      password: '1234',
+    });
 
     expect(
       authenticateUser.execute({

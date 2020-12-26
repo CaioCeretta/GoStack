@@ -7,6 +7,9 @@ interface Request {
   provider: string;
 }
 
+{
+
+}
 class CreateAppointmentService {
   private appointmentsRepository: AppointmentsRepository;
 

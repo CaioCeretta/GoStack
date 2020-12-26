@@ -24,31 +24,31 @@ export const Container = styled.div<ContainerProps>`
     margin-top: 8px;
   }
 
-  ${props =>
+  ${(props) =>
     props.isErrored &&
     css`
       border-color: #c53030;
     `}
 
-  ${props =>
+  ${(props) =>
     props.isFocused &&
     css`
       color: #ff9000;
       border-color: #ff9000;
     `}
 
-  ${props =>
+  ${(props) =>
     props.isFilled &&
     css`
-      border-color: #ff9000;
+      color: #ff9000;
     `}
+
   input {
-    background: transparent;
     flex: 1;
+    background: transparent;
     border: 0;
     color: #f4ede8;
 
-    align-content: center;
     &::placeholder {
       color: #666360;
     }

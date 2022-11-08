@@ -1,11 +1,12 @@
-const { response } = require('express');
 const express = require('express');
+const { uuid } = require('uuidv4')
 
 let port = 3333;
 
 const app = express();
 
 app.use(express.json()); 
+
 
 /**
  * Tipos de paramêtros
@@ -16,20 +17,71 @@ app.use(express.json());
  * Esses tipos de paramêtros podem ser usados em conjunto
  */
 
+const projects = [];
+
 app.get('/projects', (req, res) => {
   // return res.send('Hello World');
-  return res.json({
-    msg: 'Hello GoStack'
-  })
-})
+  // return res.json(projects)
+  const { title } = req.query;
+
+  console.log(req.query);
+
+  const results = title
+  ? projects.filter(project => project.title.includes(title))
+  : projects
+
+  return res.json(results);
+});
 
 
 app.post('/projects', (req, res) => {
-  return response.json([
-    'project1',
-    'project2',
-    'project3',
-  ])
+ 
+  const {title, owner} = req.body;
+
+  const project = { id: uuid(), title, owner }
+  projects.push(project);
+
+  return res.json(projects);
+})
+
+app.put('/projects/:id', (req, res) => {
+  const { id } = req.params;
+  const {title, owner} = req.body;
+
+  const projectIndex = projects.findIndex(project => project.id === id);
+
+  if(projectIndex < 0) {
+    return res.status(400).json({
+      error: 'Project not found'
+    })
+  }
+
+
+  const project = {
+    id,
+    title,
+    owner
+  }
+
+  projects[projectIndex] = project;
+
+  return res.json(project)
+});
+
+app.delete('/projects/:id', (req, res) => {
+  const { id } = req.params;
+
+  const projectIndex = projects.findIndex(project => project.id === id);
+
+  if(projectIndex < 0) {
+    return res.status(400).json({
+      error: 'Project not found'
+    })
+  }
+
+  projects.splice(projectIndex, 1);
+
+  return res.send();
 })
 
 app.listen(port, () => {

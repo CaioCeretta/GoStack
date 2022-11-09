@@ -1,5 +1,8 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
+import api from './services/api'
+
 import Header from './components/Header';
+import './App.css'
 
 /**
  *  Conceitos mais importantes
@@ -14,8 +17,6 @@ import Header from './components/Header';
  */
 
 export function App() {
-
-
   /* useState retorna um array com 2 posições
   
   1 Variável com seu valor inicial
@@ -23,14 +24,24 @@ export function App() {
 
   */
 
-  const [projects, setProjects] = useState(['App Development', 'Front-end App']);
+  const [projects, setProjects] = useState([]);
 
-  function handleAddProject() {
-    // projects.push(`New Project ${Date.now()}`);
+  useEffect(() => {
+    api.get('projects').then(response => {
+      setProjects(response.data)
+    });
+  }, [])
 
-    setProjects([...projects, `New Project ${Date.now()}`]);
+  async function handleAddProject() {
 
-    console.log(projects)
+    const response = await api.post('projects', {
+      title: `New Project ${Date.now()}`,
+      owner: 'Caio Ceretta'
+    });
+
+    const project = response.data;
+
+    setProjects([...projects, project]);
   }
 
   return (
@@ -38,10 +49,10 @@ export function App() {
       <Header title="Projects" />
 
       <ul>
-        {projects.map(project => <li key={project}>{project}</li>)}
+        {projects.map((project) => <li key={project.id}>{project.title}</li>)}
       </ul>
 
-      <button type='button' onClick={handleAddProject}>Add Project</button>
+      <button type="button" onClick={handleAddProject}>Add Project</button>
     </>
   )
 }

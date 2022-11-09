@@ -1,10 +1,12 @@
 const express = require('express');
+const cors = require('cors');
 const { uuid } = require('uuidv4')
 
 let port = 3333;
 
 const app = express();
 
+app.use(cors());
 app.use(express.json()); 
 
 
@@ -41,7 +43,7 @@ app.post('/projects', (req, res) => {
   const project = { id: uuid(), title, owner }
   projects.push(project);
 
-  return res.json(projects);
+  return res.json(project);
 })
 
 app.put('/projects/:id', (req, res) => {

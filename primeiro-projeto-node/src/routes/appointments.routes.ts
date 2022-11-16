@@ -4,13 +4,17 @@ import { parseISO } from 'date-fns';
 import { getCustomRepository } from 'typeorm';
 import AppointmentsRepository from '../repositories/AppointmentsRepository';
 import CreateAppointmentService from '../services/CreateAppointmentService';
+import ensureAuthenticated from '../middlewares/ensureAuthenticated';
 
 const appointmentsRouter = Router();
 
 /* Rota: Receber a requisição, chamar outro arquivo, devolver uma resposta
 Se fizermos algo além disso, nós iremos querer abstrair essa lógica dentro de um service */
 
+appointmentsRouter.use(ensureAuthenticated);
+
 appointmentsRouter.get('/', async (req, res) => {
+  console.log(req.user);
   const appointmentsRepository = getCustomRepository(AppointmentsRepository);
   const appointments = await appointmentsRepository.find();
 

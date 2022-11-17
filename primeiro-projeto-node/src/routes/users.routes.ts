@@ -13,47 +13,40 @@ const usersRouter = Router();
 /** Reminder: Precisamos do service se possuímos regra de negócio, caso contrário, poderiamos usar apenas o repositorio */
 
 usersRouter.post('/', async (req, res) => {
-  try {
-    const { name, email, password } = req.body;
+  const { name, email, password } = req.body;
 
-    const createUser = new CreateUserService();
+  const createUser = new CreateUserService();
 
-    const user = await createUser.execute({
-      name,
-      email,
-      password,
-    });
+  const user = await createUser.execute({
+    name,
+    email,
+    password,
+  });
 
-    // @ts-expect-error Apenas um paliativo para contornar o erro, aqui vai ocorrer um erro, mas estou ignorando
-    delete user.password;
+  // @ts-expect-error Apenas um paliativo para contornar o erro, aqui vai ocorrer um erro, mas estou ignorando
+  delete user.password;
 
-    return res.json(user);
-  } catch (err) {
-    return res.status(400).json({ error: (err as Error).message });
-  }
+  return res.json(user);
 });
 
 usersRouter.patch(
   '/avatar',
   ensureAuthenticated,
   upload.single('avatar'),
+  // eslint-disable-next-line consistent-return
   async (req, res) => {
-    try {
-      const updateUserAvatar = new UpdateUserAvatarService();
+    const updateUserAvatar = new UpdateUserAvatarService();
 
-      if (req.file) {
-        const user = await updateUserAvatar.execute({
-          user_id: req.user.id,
-          avatarFileName: req.file.filename,
-        });
+    if (req.file) {
+      const user = await updateUserAvatar.execute({
+        user_id: req.user.id,
+        avatarFileName: req.file.filename,
+      });
 
-        // @ts-expect-error Apenas um paliativo para contornar o erro, aqui vai ocorrer um erro, mas estou ignorando
-        delete user.password;
+      // @ts-expect-error Apenas um paliativo para contornar o erro, aqui vai ocorrer um erro, mas estou ignorando
+      delete user.password;
 
-        return res.json(user);
-      }
-    } catch (err) {
-      return res.status(400).json({ error: (err as Error).message });
+      return res.json(user);
     }
   },
 );

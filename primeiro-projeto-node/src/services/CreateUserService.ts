@@ -2,6 +2,8 @@ import { getRepository } from 'typeorm';
 import { hash } from 'bcryptjs';
 import User from '../models/User';
 
+import AppError from '../errors/AppError';
+
 interface Request {
   name: string;
   email: string;
@@ -17,7 +19,7 @@ class CreateUserService {
     });
 
     if (checkEmailExists) {
-      throw new Error('Email is already used'); // Service nunca se conecta com o response, logo precisa do throw para
+      throw new AppError('Email is already used'); // Service nunca se conecta com o response, logo precisa do throw para
       // disparar o erro
     }
 

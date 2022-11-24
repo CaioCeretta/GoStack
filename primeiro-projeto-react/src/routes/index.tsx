@@ -12,7 +12,10 @@ const Routes: React.FC = () => (
   <RouterContainer>
     <RoutesItens>
       <Route path="/" element={<Dashboard />} />
-      <Route path="/repo" element={<Repository />} />
+      <Route
+        path="/repositories/:author/:repository"
+        element={<Repository />}
+      />
     </RoutesItens>
   </RouterContainer>
 );

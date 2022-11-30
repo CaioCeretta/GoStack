@@ -1,5 +1,9 @@
-import React from 'react';
-import { FiLogIn, FiMail, FiLock, FiUser, FiArrowLeft } from 'react-icons/fi';
+import React, { useCallback, useRef } from 'react';
+import { FiMail, FiLock, FiUser, FiArrowLeft } from 'react-icons/fi';
+import { FormHandles } from '@unform/core';
+import { Form } from '@unform/web';
+import * as Yup from 'yup';
+import getValidationErrors from '../../utils/getValidationErrors';
 
 import logoImg from '../../assets/logo.svg';
 
@@ -8,35 +12,63 @@ import Button from '../../components/Button';
 
 import { Container, Content, Background } from './styles';
 
-const SignUp: React.FC = () => (
-  <Container>
-    <Background />
-    <Content>
-      <img src={logoImg} alt="Logo" />
+const SignUp: React.FC = () => {
+  const formRef = useRef<FormHandles>(null);
 
-      <form>
-        <h1>Create Account</h1>
+  const handleSubmit = useCallback(async (data: object) => {
+    try {
+      formRef.current?.setErrors({});
 
-        <Input name="name" icon={FiUser} placeholder="Name" />
+      const schema = Yup.object().shape({
+        name: Yup.string().required('The name is required'),
+        email: Yup.string()
+          .email('Type a valid e-mail address')
+          .required('The email is required'),
+        password: Yup.string().min(6, 'At least 6 characters'),
+      });
 
-        <Input name="email" icon={FiMail} placeholder="E-mail" />
+      await schema.validate(data, {
+        abortEarly: false,
+      });
+    } catch (err: any) {
+      console.log(err);
 
-        <Input
-          name="password"
-          icon={FiLock}
-          type="text"
-          placeholder="Password"
-        />
+      const errors = getValidationErrors(err);
 
-        <Button type="submit">Register</Button>
-      </form>
+      formRef.current?.setErrors(errors);
+    }
+  }, []);
 
-      <a href="login">
-        <FiArrowLeft />
-        Return to login
-      </a>
-    </Content>
-  </Container>
-);
+  return (
+    <Container>
+      <Background />
+      <Content>
+        <img src={logoImg} alt="Logo" />
+
+        <Form ref={formRef} onSubmit={handleSubmit}>
+          <h1>Create Your Account</h1>
+
+          <Input name="name" icon={FiUser} placeholder="Name" />
+
+          <Input name="email" icon={FiMail} placeholder="E-mail" />
+
+          <Input
+            name="password"
+            icon={FiLock}
+            type="text"
+            placeholder="Password"
+          />
+
+          <Button type="submit">Register</Button>
+        </Form>
+
+        <a href="login">
+          <FiArrowLeft />
+          Return to login
+        </a>
+      </Content>
+    </Container>
+  );
+};
 
 export default SignUp;

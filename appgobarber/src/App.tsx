@@ -1,32 +1,35 @@
 import 'react-native-gesture-handler';
 import React from 'react';
 
-import { StatusBar, Text, View } from 'react-native';
-import { useFonts } from 'expo-font';
-import AppLoading from 'expo-app-loading';
+import {View, StatusBar, Text} from 'react-native';
+
 import {
-  RobotoSlab_400Regular,
-  RobotoSlab_500Medium,
+  useFonts,
+  RobotoSlab_400Regular as RobotoSlab_Regular,
+  RobotoSlab_500Medium as RobotoSlab_Medium,
+  RobotoSlab_700Bold as RobotoSlab_Bold,
 } from '@expo-google-fonts/roboto-slab';
+import {NavigationContainer} from '@react-navigation/native';
+
+import AppProvider from './hooks';
 import Routes from './routes';
 
 const App: React.FC = () => {
   const [fontsLoaded] = useFonts({
-    RobotoSlab_400Regular,
-    RobotoSlab_500Medium,
+    RobotoSlab_Regular,
+    RobotoSlab_Medium,
+    RobotoSlab_Bold,
   });
 
-  if (!fontsLoaded) {
-    throw new Error("The fonts aren't loaded");
-  }
-
   return (
-    <>
+    <NavigationContainer>
       <StatusBar barStyle="light-content" backgroundColor="#312e38" />
-      <View style={{ flex: 1, backgroundColor: '#312e38' }}>
-        <Routes />
-      </View>
-    </>
+      <AppProvider>
+        <View style={{flex: 1, backgroundColor: '#312e38'}}>
+          {fontsLoaded ? <Routes /> : <Text>EEEEEEEE, CARALHO</Text>}
+        </View>
+      </AppProvider>
+    </NavigationContainer>
   );
 };
 

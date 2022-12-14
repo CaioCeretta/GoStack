@@ -69,7 +69,7 @@ const SignUp: React.FC = () => {
           type: 'error',
           title: 'Register error',
           description:
-            'An error has occurred creating your register, try again',
+            'An error has occurred creating your account, please try again',
         });
       }
     },

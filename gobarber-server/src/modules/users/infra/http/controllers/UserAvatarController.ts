@@ -4,6 +4,7 @@ import { Request, Response } from 'express';
 import { container } from 'tsyringe';
 
 export default class UserAvatarController {
+  // eslint-disable-next-line consistent-return
   public async update(
     req: Request,
     res: Response,

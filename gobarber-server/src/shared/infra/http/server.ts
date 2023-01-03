@@ -6,7 +6,7 @@ import 'express-async-errors';
 
 import uploadConfig from '@config/upload';
 import AppError from '@shared/errors/AppError';
-import routes from '../../routes';
+import routes from './routes';
 
 import '@shared/infra/typeorm';
 import '@shared/container';
@@ -14,9 +14,8 @@ import '@shared/container';
 const app = express();
 
 app.use(cors({}));
-
 app.use(express.json());
-
+app.use('/files', express.static(uploadConfig.uploadsFolder));
 app.use(routes);
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

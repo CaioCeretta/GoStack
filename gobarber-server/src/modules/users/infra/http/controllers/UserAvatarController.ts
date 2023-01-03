@@ -14,7 +14,7 @@ export default class UserAvatarController {
     if (req.file) {
       const user = await updateUserAvatar.execute({
         user_id: req.user.id,
-        avatarFileName: req.file.filename,
+        avatarFilename: req.file.filename,
       });
 
       // @ts-expect-error Aqui vai ocorrer um erro, mas estou ignorando

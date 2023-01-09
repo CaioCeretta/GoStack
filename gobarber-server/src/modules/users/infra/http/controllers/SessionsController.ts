@@ -13,6 +13,8 @@ export default class SessionsController {
       password,
     });
 
+    // console.log(user);
+
     return res.json({ user, token });
   }
 }

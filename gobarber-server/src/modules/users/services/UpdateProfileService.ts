@@ -36,14 +36,11 @@ export default class UpdateProfileService {
       throw new AppError('User not found');
     }
 
-    const userWithUpdatedEmail = await this.usersRepository.findByEmail(email);
+    const checkUserEmail = await this.usersRepository.findByEmail(email);
 
-    if (userWithUpdatedEmail && userWithUpdatedEmail.id !== user_id) {
+    if (checkUserEmail && checkUserEmail.id !== user_id) {
       throw new AppError('E-mail already been used');
     }
-
-    user.name = name;
-    user.email = email;
 
     if (password && !old_password) {
       throw new AppError('Old password has not been informed');
@@ -51,8 +48,8 @@ export default class UpdateProfileService {
 
     if (password && old_password) {
       const checkOldPassword = await this.hashProvider.compareHash(
-        user.password,
         old_password,
+        user.password,
       );
 
       if (!checkOldPassword) {
@@ -61,6 +58,9 @@ export default class UpdateProfileService {
 
       user.password = await this.hashProvider.generateHash(password);
     }
+
+    user.name = name;
+    user.email = email;
 
     return this.usersRepository.save(user);
   }

@@ -25,6 +25,7 @@ export default class ProfileController {
       name,
       email,
       password,
+      old_password,
     });
 
     // @ts-expect-error Aqui vai ocorrer um erro, mas estou ignorando

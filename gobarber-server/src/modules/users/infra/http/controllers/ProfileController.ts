@@ -28,9 +28,6 @@ export default class ProfileController {
       old_password,
     });
 
-    // @ts-expect-error Aqui vai ocorrer um erro, mas estou ignorando
-    delete user.password;
-
     return res.json(user);
   }
 }

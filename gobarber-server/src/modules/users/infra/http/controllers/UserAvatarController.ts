@@ -1,5 +1,6 @@
 import AuthenticateUserService from '@modules/users/services/AuthenticateUserService';
 import UpdateUserAvatarService from '@modules/users/services/UpdateUserAvatarService';
+import { classToClass } from 'class-transformer';
 import { Request, Response } from 'express';
 import { container } from 'tsyringe';
 
@@ -17,10 +18,7 @@ export default class UserAvatarController {
         avatarFilename: req.file.filename,
       });
 
-      // @ts-expect-error Aqui vai ocorrer um erro, mas estou ignorando
-      delete user.password;
-
-      return res.json(user);
+      return res.json(classToClass(user));
     }
   }
 }

@@ -13,13 +13,13 @@ interface IRequestDTO {
   year: number;
 }
 
-type IResponseDTO = Array<{
+type IResponse = Array<{
   day: number;
   available: boolean;
 }>;
 
 @injectable()
-export default class ListProviderMonthAvailability {
+export default class ListProviderMonthAvailabilityService {
   constructor(
     @inject('AppointmentsRepository')
     private appointmentsRepository: IAppointmentsRepository,
@@ -29,7 +29,7 @@ export default class ListProviderMonthAvailability {
     provider_id,
     month,
     year,
-  }: IRequestDTO): Promise<IResponseDTO> {
+  }: IRequestDTO): Promise<IResponse> {
     const appointments =
       await this.appointmentsRepository.findAllInMonthFromProvider({
         provider_id,

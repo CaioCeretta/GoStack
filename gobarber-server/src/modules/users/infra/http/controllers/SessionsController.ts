@@ -1,6 +1,8 @@
 import AuthenticateUserService from '@modules/users/services/AuthenticateUserService';
+import { classToClass } from 'class-transformer';
 import { Request, Response } from 'express';
 import { container } from 'tsyringe';
+import User from '../../typeorm/entities/User';
 
 export default class SessionsController {
   public async create(req: Request, res: Response): Promise<Response> {
@@ -15,6 +17,6 @@ export default class SessionsController {
 
     // console.log(user);
 
-    return res.json({ user, token });
+    return res.json({ user: classToClass(user), token });
   }
 }

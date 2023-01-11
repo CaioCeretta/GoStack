@@ -16,7 +16,7 @@ type IResponseDTO = Array<{
 }>;
 
 @injectable()
-export default class ListProviderDayAvailability {
+export default class ListProviderDayAvailabilityService {
   constructor(
     @inject('AppointmentsRepository')
     private appointmentsRepository: IAppointmentsRepository,

@@ -1,8 +1,9 @@
-import { getHours, isBefore, startOfHour } from 'date-fns';
+import { getHours, isBefore, startOfHour, format } from 'date-fns';
 import { injectable, inject } from 'tsyringe';
 
 import AppError from '@shared/errors/AppError';
 import Appointment from '@modules/appointments/infra/typeorm/entities/Appointment';
+import INotificationsRepository from '@modules/notifications/repositories/INotificationsRepository';
 import IAppointmentsRepository from '../repositories/IAppointmentsRepository';
 /**
  * [X] Recebimento das informações
@@ -29,6 +30,9 @@ class CreateAppointmentService {
   constructor(
     @inject('AppointmentsRepository')
     private appointmentsRepository: IAppointmentsRepository,
+
+    @inject('NotificationsRepository')
+    private notificationsRepository: INotificationsRepository,
   ) {}
 
   public async execute({
@@ -38,7 +42,7 @@ class CreateAppointmentService {
   }: IRequest): Promise<Appointment> {
     const appointmentHour = startOfHour(date);
 
-    console.log(user_id);
+    // console.log(user_id);
 
     if (isBefore(appointmentHour, Date.now())) {
       throw new AppError(
@@ -67,6 +71,14 @@ class CreateAppointmentService {
       provider_id,
       user_id,
       date: appointmentHour,
+    });
+
+    // Estou ciente que não precisava ter 'escapado' o 'at' mas fiz por cunho educacional
+    const dateFormatted = format(appointmentHour, "dd/MM/yyyy 'at' HH:mm'h'");
+
+    await this.notificationsRepository.create({
+      recipient_id: provider_id,
+      content: `New appointment for day ${dateFormatted})}`,
     });
 
     return appointment;
